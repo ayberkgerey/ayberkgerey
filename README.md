@@ -4,7 +4,7 @@
 <p>I am Ayberk, I am developing my skills for many years with a big ambition.</p>
 <p>I love programming and I am working on full stack developing.</p>
 
-You can feel free to contact me anytime you want!😉
+You can feel free to contact me anytime you want!
 
 [![Linkedin Badge](https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ayberk-gerey-826637180/)
 [![Mail Badge](https://img.shields.io/badge/email-c14438?style=for-the-badge&logo=Gmail&logoColor=white&link=mailto:eda.altuntas24@gmail.com)](mailto:ayberkgerey@gmail.com)
