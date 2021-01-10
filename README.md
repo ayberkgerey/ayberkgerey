@@ -7,7 +7,7 @@
 You can feel free to contact me anytime you want!
 
 [![Linkedin Badge](https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ayberk-gerey-826637180/)
-[![Mail Badge](https://img.shields.io/badge/email-c14438?style=for-the-badge&logo=Gmail&logoColor=white&link=mailto:eda.altuntas24@gmail.com)](mailto:ayberkgerey@gmail.com)
+[![Mail Badge](https://img.shields.io/badge/email-c14438?style=for-the-badge&logo=Gmail&logoColor=white&link=mailto:ayberkgerey@gmail.com)](mailto:ayberkgerey@gmail.com)
 [![Twitter Badge](https://img.shields.io/badge/twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/GereyAyberk)
 [![Github Badge](https://img.shields.io/badge/github-333?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ayberkgerey)
 ![Visitor Badge](https://visitor-badge.laobi.icu/badge?page_id=ayberkgerey.ayberkgerey)
