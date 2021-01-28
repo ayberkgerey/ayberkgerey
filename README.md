@@ -5,7 +5,6 @@
 <br/><br/><br/><br/><br/><br/><br/><br/><br/>
 <p>I am Ayberk, I am developing my skills for many years with a big ambition.</p>
 <p>A lot of my projects are private so contact me if you would like to talk about them!</p>
-<h2>You can feel free to contact me anytime you want!</h2>
 
 [![Linkedin Badge](https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ayberk-gerey-826637180/)
 [![Mail Badge](https://img.shields.io/badge/email-c14438?style=for-the-badge&logo=Gmail&logoColor=white&link=mailto:ayberkgerey@gmail.com)](mailto:ayberkgerey@gmail.com)
