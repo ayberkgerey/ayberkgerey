@@ -2,7 +2,7 @@
 <img align='left' src="https://github-readme-stats.vercel.app/api/top-langs?username=ayberkgerey&show_icons=true&locale=en&&theme=tokyonight"/>
 <img align='left' src="https://github-readme-stats.vercel.app/api?username=ayberkgerey&show_icons=true&theme=tokyonight">
 
-<br/><br/><br/><br/><br/><br/><br/>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/>
 <p>I am Ayberk, I am developing my skills for many years with a big ambition.</p>
 <p>A lot of my projects are private so contact me if you would like to talk about them!</p>
 <p>You can feel free to contact me anytime you want!</p>
