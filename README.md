@@ -3,8 +3,6 @@
 <img align='left' src="https://github-readme-stats.vercel.app/api?username=ayberkgerey&show_icons=true&theme=tokyonight">
 
 <p>I am Ayberk, I am developing my skills for many years with a big ambition.</p>
-<p>I love programming and I am working on full stack developing.</p>
-
 <p>You can feel free to contact me anytime you want!</p>
 
 [![Linkedin Badge](https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ayberk-gerey-826637180/)
