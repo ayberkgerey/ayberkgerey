@@ -1,23 +1,43 @@
- <h1>Hi there 👋</h1>
-<img align='left' src="https://github-readme-stats.vercel.app/api/top-langs?username=ayberkgerey&show_icons=true&locale=en&&theme=tokyonight"/>
+# 👋 Hi, I'm Ayberk
 
-<p>I am Ayberk, I am developing myself for Fullstack Development for many years with ambition.</p>
-<p>I am currently working with Spring Boot and React Native & React JS</p>
+### ☁️ Software Engineer → Cloud Engineer
 
-[![Linkedin Badge](https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ayberk-gerey-826637180/)
-[![Mail Badge](https://img.shields.io/badge/email-c14438?style=for-the-badge&logo=Gmail&logoColor=white&link=mailto:ayberkgerey@gmail.com)](mailto:ayberkgerey@gmail.com)
-[![Twitter Badge](https://img.shields.io/badge/twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/GereyAyberk)
-[![Github Badge](https://img.shields.io/badge/github-333?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ayberkgerey)
-![Visitor Badge](https://visitor-badge.laobi.icu/badge?page_id=ayberkgerey.ayberkgerey)
+3 years of experience building web & mobile & backend applications.
+Now I'm moving deeper into **Cloud Engineering**, focusing on building, automating and scaling modern infrastructure.
 
-<img src="https://media3.giphy.com/media/ln7z2eWriiQAllfVcn/200w.webp" width="100"><img src="https://i.giphy.com/media/eNAsjO55tPbgaor7ma/200w.webp" width="100"><img src="https://i.giphy.com/media/KzJkzjggfGN5Py6nkT/200.webp" width="100">
+**Working With:**
 
-<br>
-  
-# 📊 GitHub Stats:
-![](https://github-readme-streak-stats.herokuapp.com/?user=ayberkgerey&theme=dark&hide_border=false)<br/>
+`AWS` · `Terraform` · `Networking` · `CI/CD` · `Linux` · `Observability` . `Docker` · `Kubernetes` 
 
-## 🏆 GitHub Trophies
-![](https://github-profile-trophy.vercel.app/?username=ayberkgerey&theme=radical&no-frame=false&no-bg=true&margin-w=4)
+---
 
-<!-- Proudly created with GPRM ( https://gprm.itsvg.in ) -->
+### 🛠️ Cloud Stack
+
+<p>
+<img src="https://skillicons.dev/icons?i=aws,terraform,linux,githubactions,docker,kubernetes" />
+</p>
+
+### 💻 Background
+
+<p>
+<img src="https://skillicons.dev/icons?i=typescript,javascript,react,nodejs,spring" />
+</p>
+
+---
+
+> **Build it. Automate it. Monitor it. Scale it. ☁️**
+
+---
+
+<p>
+<a href="https://www.linkedin.com/in/ayberk-gerey-826637180/">
+<img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/>
+</a>
+<a href="mailto:ayberkgerey@gmail.com">
+<img src="https://img.shields.io/badge/Email-EA4335?style=for-the-badge&logo=gmail&logoColor=white"/>
+</a>
+</p>
+
+<p align="center">
+<img src="https://github-readme-stats.vercel.app/api?username=ayberkgerey&show_icons=true&theme=tokyonight&hide_border=true" />
+</p>
