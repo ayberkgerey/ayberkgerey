@@ -20,7 +20,7 @@ Now I'm moving deeper into **Cloud Engineering**, focusing on building, automati
 ### 💻 Background
 
 <p>
-<img src="https://skillicons.dev/icons?i=typescript,javascript,react,nodejs,spring" />
+<img src="https://skillicons.dev/icons?i=typescript,javascript,react,nodejs,spring,dotnet,angular" />
 </p>
 
 ---
