@@ -21,7 +21,7 @@ export function SiteHeader() {
         </Link>
 
         <div className="flex items-center gap-2 md:gap-6">
-          <SiteNav items={mainNav} />
+          <SiteNav items={mainNav} mobileExtras={<SocialLinks />} />
           <SocialLinks className="hidden sm:flex" />
         </div>
       </div>

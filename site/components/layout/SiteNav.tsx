@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import type { NavItem } from "@/types/content";
 
 function isActive(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function SiteNav({ items }: { items: NavItem[] }) {
+export function SiteNav({ items, mobileExtras }: { items: NavItem[]; mobileExtras?: ReactNode }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [previousPathname, setPreviousPathname] = useState(pathname);
@@ -89,6 +89,9 @@ export function SiteNav({ items }: { items: NavItem[] }) {
             );
           })}
         </ul>
+        {mobileExtras ? (
+          <div className="mx-auto max-w-6xl border-t border-line px-5 py-3 sm:hidden">{mobileExtras}</div>
+        ) : null}
       </div>
     </nav>
   );
