@@ -20,31 +20,29 @@ export function Portrait() {
     <figure className="relative mx-auto w-full max-w-[26rem]">
       <div
         aria-hidden="true"
-        className="absolute -inset-16 -z-10 rounded-full bg-[radial-gradient(circle_at_50%_40%,rgb(197_163_106_/_0.18),transparent_62%)] blur-2xl"
+        className="absolute -inset-16 -z-10 rounded-full bg-[radial-gradient(circle_at_50%_40%,rgb(197_163_106_/_0.16),transparent_62%)] blur-2xl"
       />
 
-      <div className="relative border border-line bg-card px-7 pb-8 pt-10 sm:px-10 sm:pb-9 sm:pt-12">
+      <div className="relative border border-line bg-card">
         {src ? (
-          <div className="relative mx-auto aspect-square w-full max-w-[20rem] overflow-hidden rounded-full border border-line-strong bg-charcoal shadow-[0_0_0_1px_rgb(197_163_106_/_0.08),0_24px_80px_-28px_rgb(0_0_0_/_0.85)]">
+          <div className="relative aspect-[4/5] overflow-hidden bg-charcoal">
             <Image
               src={src}
               alt={alt}
               fill
               priority
-              sizes="(min-width: 1024px) 20rem, (min-width: 640px) 50vw, 80vw"
-              className="object-cover object-[center_18%] scale-[1.12]"
+              sizes="(min-width: 1024px) 26rem, (min-width: 640px) 60vw, 90vw"
+              className="object-cover object-[center_18%]"
             />
+            <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,transparent_58%,rgb(8_9_11_/_0.78)_100%)]" />
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ring-gold/25"
+              className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_12%,rgb(197_163_106_/_0.1),transparent_48%)] mix-blend-screen"
             />
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(ellipse_at_70%_12%,rgb(197_163_106_/_0.12),transparent_42%)] mix-blend-screen"
-            />
+            <div aria-hidden="true" className="bg-vignette absolute inset-0" />
           </div>
         ) : (
-          <div className="relative mx-auto flex aspect-square w-full max-w-[20rem] flex-col items-center justify-center overflow-hidden rounded-full border border-line-strong bg-[radial-gradient(ellipse_at_50%_30%,#202124,#111214_70%)]">
+          <div className="relative flex aspect-[4/5] flex-col items-center justify-center overflow-hidden bg-[radial-gradient(ellipse_at_50%_30%,#202124,#111214_70%)]">
             <div aria-hidden="true" className="absolute inset-0 bg-blueprint opacity-70" />
             <span className="relative font-serif text-[6rem] font-normal italic leading-none text-gold/80">AG</span>
             <span className="relative mt-4 font-mono text-[0.6875rem] uppercase tracking-[0.22em] text-silver">
@@ -53,7 +51,7 @@ export function Portrait() {
           </div>
         )}
 
-        <figcaption className="mt-8 flex items-end justify-between gap-4">
+        <figcaption className="flex items-end justify-between gap-4 px-6 py-5">
           <div>
             <p className="font-serif text-2xl text-ivory">{profile.name}</p>
             <p className="mt-1 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-gold">Software → Cloud</p>
