@@ -1,13 +1,16 @@
-# Portfolio site
+# ayberkgerey: portfolio site
 
 Personal engineering portfolio for Ayberk Gerey, built with Next.js (App Router), TypeScript, and Tailwind CSS. All content lives in local TypeScript files. There is no backend, database, or CMS.
+
+`README.md` at the repository root is the GitHub profile page and is not part of the site.
 
 ## Local development
 
 Requires Node.js 20.9 or newer.
 
 ```bash
-cd site
+git clone https://github.com/ayberkgerey/ayberkgerey.git
+cd ayberkgerey
 npm install
 npm run dev        # http://localhost:3000
 ```
@@ -23,7 +26,7 @@ npm run start      # serve the production build
 ## Project structure
 
 ```
-site/
+ayberkgerey/
   app/                     routes and layouts
     layout.tsx             header, footer, fonts, default metadata
     page.tsx               home
