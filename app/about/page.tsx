@@ -97,6 +97,20 @@ export default function AboutPage() {
                 </h3>
                 <p className="mt-2 text-sm text-silver">
                   {item.employmentType} · {item.location}
+                  {item.website ? (
+                    <>
+                      {" · "}
+                      <a
+                        href={item.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="link-underline text-gold"
+                      >
+                        {item.website.replace(/^https?:\/\//, "")}
+                        <span className="sr-only"> (opens in a new tab)</span>
+                      </a>
+                    </>
+                  ) : null}
                 </p>
                 {item.highlights && item.highlights.length > 0 ? (
                   <ul className="mt-5 space-y-2.5">

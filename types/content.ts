@@ -61,6 +61,7 @@ export type ExperienceItem = {
   employmentType: string;
   period: string;
   location: string;
+  website?: string;
   highlights?: string[];
   skills?: string[];
 };
