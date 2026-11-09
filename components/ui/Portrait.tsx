@@ -32,9 +32,9 @@ export function Portrait() {
               fill
               priority
               sizes="(min-width: 1024px) 26rem, (min-width: 640px) 60vw, 90vw"
-              className="object-cover object-[center_18%]"
+              className="object-cover object-center"
             />
-            <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,transparent_58%,rgb(8_9_11_/_0.78)_100%)]" />
+            <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,transparent_72%,rgb(8_9_11_/_0.45)_100%)]" />
             <div
               aria-hidden="true"
               className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_12%,rgb(197_163_106_/_0.1),transparent_48%)] mix-blend-screen"
