@@ -15,7 +15,7 @@ export const profile = {
    * for example "/images/ayberk-gerey.jpg". Leave it null to show the placeholder.
    */
   portrait: {
-    src: "/images/ayberk-gerey.jpg",
+    src: "/images/ayberk-gerey-studio.jpg",
     alt: "Portrait of Ayberk Gerey",
   },
 
