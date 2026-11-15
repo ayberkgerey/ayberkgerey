@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import type { Project, ProjectSectionId } from "@/types/content";
+import type { ImageAsset, Project, ProjectSectionId } from "@/types/content";
 import { Container } from "@/components/layout/Container";
 import { ContentBlocks } from "@/components/content/ContentBlocks";
 import { ButtonLink } from "@/components/ui/ButtonLink";
@@ -29,6 +29,36 @@ function textSection(project: Project, id: ProjectSectionId): Section | null {
   return { id, title: sectionTitles[id], content: <ContentBlocks blocks={blocks} /> };
 }
 
+function ProjectFigure({ image, openLabel }: { image: ImageAsset; openLabel: string }) {
+  return (
+    <figure>
+      <a
+        href={image.src.src}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group relative block overflow-hidden border border-line bg-obsidian p-2 transition-colors duration-500 hover:border-line-strong sm:p-3"
+      >
+        <Image
+          src={image.src}
+          alt={image.alt}
+          sizes="(min-width: 1280px) 60rem, (min-width: 1024px) 70vw, 100vw"
+          className="h-auto w-full"
+        />
+        <span className="absolute right-4 top-4 inline-flex items-center gap-2 border border-line bg-obsidian/80 px-3 py-1.5 font-mono text-[0.625rem] uppercase tracking-[0.16em] text-silver opacity-0 backdrop-blur transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100">
+          Full size <ExternalIcon className="size-3" />
+        </span>
+        <span className="sr-only">{openLabel}</span>
+      </a>
+      {image.caption ? (
+        <figcaption className="mt-4 flex gap-3 text-sm leading-6 text-silver">
+          <span aria-hidden="true" className="mt-3 h-px w-6 shrink-0 bg-gold/60" />
+          {image.caption}
+        </figcaption>
+      ) : null}
+    </figure>
+  );
+}
+
 function buildSections(project: Project): Section[] {
   const sections: (Section | null)[] = [
     textSection(project, "overview"),
@@ -39,32 +69,22 @@ function buildSections(project: Project): Section[] {
           id: "diagram",
           title: "Architecture Diagram",
           wide: true,
+          content: <ProjectFigure image={project.diagram} openLabel="Open the full-size diagram in a new tab" />,
+        }
+      : null,
+    project.screenshots && project.screenshots.length > 0
+      ? {
+          id: "screenshots",
+          title: "Screenshots",
+          wide: true,
           content: (
-            <figure>
-              <a
-                href={project.diagram.src.src}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative block overflow-hidden border border-line bg-obsidian p-2 transition-colors duration-500 hover:border-line-strong sm:p-3"
-              >
-                <Image
-                  src={project.diagram.src}
-                  alt={project.diagram.alt}
-                  sizes="(min-width: 1280px) 60rem, (min-width: 1024px) 70vw, 100vw"
-                  className="h-auto w-full"
-                />
-                <span className="absolute right-4 top-4 inline-flex items-center gap-2 border border-line bg-obsidian/80 px-3 py-1.5 font-mono text-[0.625rem] uppercase tracking-[0.16em] text-silver opacity-0 backdrop-blur transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100">
-                  Full size <ExternalIcon className="size-3" />
-                </span>
-                <span className="sr-only">Open the full-size diagram in a new tab</span>
-              </a>
-              {project.diagram.caption ? (
-                <figcaption className="mt-4 flex gap-3 text-sm leading-6 text-silver">
-                  <span aria-hidden="true" className="mt-3 h-px w-6 shrink-0 bg-gold/60" />
-                  {project.diagram.caption}
-                </figcaption>
-              ) : null}
-            </figure>
+            <ul className="space-y-10">
+              {project.screenshots.map((image) => (
+                <li key={image.src.src}>
+                  <ProjectFigure image={image} openLabel="Open the full-size screenshot in a new tab" />
+                </li>
+              ))}
+            </ul>
           ),
         }
       : null,

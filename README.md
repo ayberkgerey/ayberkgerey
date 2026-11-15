@@ -101,6 +101,7 @@ Every section is optional, and a section without content is not rendered. Availa
 | `sections.problem` | Problem and Objectives |
 | `sections.architecture` | Architecture |
 | `diagram` | Architecture Diagram |
+| `screenshots` | Screenshots |
 | `stack` | Technology Stack |
 | `sections.implementation` | Implementation |
 | `sections.decisions` | Key Technical Decisions |
@@ -127,8 +128,11 @@ To add an architecture diagram or card image, put the file in `public/images/pro
 import myDiagram from "@/public/images/projects/my-diagram.png";
 
 diagram: { src: myDiagram, alt: "Describe what the diagram shows", caption: "Optional caption" },
+screenshots: [{ src: consoleCapture, alt: "What the screenshot shows", caption: "Optional caption" }],
 coverImage: { src: myDiagram, alt: "" },
 ```
+
+Use `diagram` only for an architecture drawing. Console and UI captures go in `screenshots`.
 
 Importing the image lets Next.js read its size and serve optimized, responsive versions.
 

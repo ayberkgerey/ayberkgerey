@@ -31,7 +31,7 @@ export const projects: Project[] = [
     featured: true,
     tags: ["AWS", "S3", "Lambda", "Cognito", "IAM", "Sharp", "CloudWatch"],
     coverImage: sipResultsImage,
-    diagram: sipBucketDiagram,
+    screenshots: [sipResultsImage, sipBucketDiagram],
     repositoryUrl: "https://github.com/ayberkgerey/serverless-image-processing",
     stack: [
       { name: "S3 input bucket", purpose: "Private originals under `uploads/`. Object Created on that prefix is the only event that starts work" },

@@ -43,7 +43,10 @@ export type Project = {
   featured?: boolean;
   /** Shown on the project card when present. */
   coverImage?: ImageAsset;
+  /** Rendered as Architecture Diagram. Omit when the project has no diagram. */
   diagram?: ImageAsset;
+  /** Console or UI captures. Rendered under Screenshots, not as a diagram. */
+  screenshots?: ImageAsset[];
   stack?: TechStackItem[];
   repositoryUrl?: string;
   videoUrl?: string;
