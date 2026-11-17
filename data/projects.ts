@@ -1,7 +1,65 @@
 import type { Project } from "@/types/content";
+import ecommerceOrderDiagram from "@/public/images/projects/ecommerce-order-diagram.png";
+import ecommerceOrderTerminal from "@/public/images/projects/ecommerce-order-terminal.png";
+import ecommerceOrderSqs from "@/public/images/projects/ecommerce-order-sqs.png";
+import ecommerceOrderLambda from "@/public/images/projects/ecommerce-order-lambda.png";
+import ecommerceOrderCloudwatchLog from "@/public/images/projects/ecommerce-order-cloudwatch-log.png";
+import ecommerceOrderLambdaMetrics from "@/public/images/projects/ecommerce-order-lambda-metrics.png";
+import ecommerceOrderSqsMonitoring from "@/public/images/projects/ecommerce-order-sqs-monitoring.png";
+import ecommerceOrderDlq from "@/public/images/projects/ecommerce-order-dlq.png";
+import ecommerceOrderDlqMonitoring from "@/public/images/projects/ecommerce-order-dlq-monitoring.png";
 import peopledeskArchitecture from "@/public/images/projects/peopledesk-architecture.png";
 import sipBuckets from "@/public/images/projects/sip-buckets.png";
 import sipResults from "@/public/images/projects/sip-results.png";
+
+const ecommerceDiagram = {
+  src: ecommerceOrderDiagram,
+  alt: "Order reliability architecture: local producer scripts send to an SQS order queue, Lambda processes the batch, SNS publishes accepted orders, failed messages move to a dead-letter queue after three receives, and CloudWatch Logs records the outcome.",
+  caption: "Local scripts stand in for checkout. SQS buffers the order, one Lambda validates and notifies, and a dead-letter queue isolates a message that still fails after three attempts.",
+};
+
+const ecommerceScreenshots = [
+  {
+    src: ecommerceOrderTerminal,
+    alt: "Terminal output from the producer scripts: the end of a 500-order run, then a failed order accepted into the queue with an SQS message ID.",
+    caption: "SQS returns a message ID only after it accepts the message. The 500-order burst and the simulated failure both end at the queue, not inside the producer request.",
+  },
+  {
+    src: ecommerceOrderSqs,
+    alt: "Amazon SQS console for the standard order queue in eu-central-1, with SQS-managed encryption, four-day retention, a 60-second visibility timeout, and a dead-letter queue enabled.",
+    caption: "Order queue after Lambda had already deleted the successful messages. Visible count is zero because processing kept up with the script.",
+  },
+  {
+    src: ecommerceOrderLambda,
+    alt: "Lambda function overview with an enabled SQS event source mapping on the order queue.",
+    caption: "The only consumer of the order queue is this function. The mapping is enabled; the dead-letter queue has no trigger.",
+  },
+  {
+    src: ecommerceOrderCloudwatchLog,
+    alt: "CloudWatch Logs stream with JSON lines for accepted orders, each including the order ID and SQS message ID, and no customer email.",
+    caption: "One accepted log line per processed message. Invocations in this stream finished in about 16–25 ms.",
+  },
+  {
+    src: ecommerceOrderLambdaMetrics,
+    alt: "Lambda Monitor tab showing 509 invocations, 100 percent success, zero throttles, a peak of 5 concurrent executions, and Errors at zero.",
+    caption: "Errors stayed at zero during the deliberate failure because the function returned it as a partial batch item failure. Proof of failure is the log line and the dead-letter queue.",
+  },
+  {
+    src: ecommerceOrderSqsMonitoring,
+    alt: "SQS monitoring for the order queue during the 500-order burst: sent, received, and deleted counts spike together while visible messages stay near zero and oldest-message age reaches about 2.7 minutes.",
+    caption: "A backlog of visible messages never formed because Lambda kept up with the producer. Age of the oldest message still moved, so orders were buffered and then drained.",
+  },
+  {
+    src: ecommerceOrderDlq,
+    alt: "Dead-letter queue configuration: 14-day retention, redrive allowed only from the source queue, and no Lambda trigger.",
+    caption: "Nothing consumes the dead-letter queue automatically. Recovery is an operator action after the cause is fixed.",
+  },
+  {
+    src: ecommerceOrderDlqMonitoring,
+    alt: "Dead-letter queue monitoring after the simulated failure: visible messages rise to 1 and age climbs, while received and deleted counts stay at zero.",
+    caption: "The poison message sat in the dead-letter queue. Nobody automatically put it back into processing.",
+  },
+];
 
 const peopledeskDiagram = {
   src: peopledeskArchitecture,
@@ -22,6 +80,294 @@ const sipResultsImage = {
 };
 
 export const projects: Project[] = [
+  {
+    slug: "ecommerce-order-reliability",
+    title: "E-Commerce Order Reliability on AWS",
+    summary:
+      "A Terraform-defined SQS, Lambda, and SNS pipeline that accepts orders when notification is slow, retries temporary failures, and isolates a poison message in a dead-letter queue after three attempts.",
+    kind: "Case study",
+    featured: true,
+    tags: ["AWS", "Terraform", "SQS", "Lambda", "SNS", "IAM", "CloudWatch"],
+    coverImage: ecommerceDiagram,
+    diagram: ecommerceDiagram,
+    screenshots: ecommerceScreenshots,
+    repositoryUrl: "https://github.com/ayberkgerey/eCommerce-order-reliability",
+    stack: [
+      { name: "Amazon SQS Standard", purpose: "Durable order buffer. Producers finish when SQS accepts the JSON; processing happens later" },
+      { name: "SQS dead-letter queue", purpose: "Holds a message after three failed receives for 14 days. No consumer, so recovery is deliberate" },
+      { name: "AWS Lambda order-processor", purpose: "Node.js 22 function: validate one order, publish to SNS, report only failed records in the batch" },
+      { name: "Amazon SNS", purpose: "Announces an order that already passed validation. Email is off unless `sns_email_endpoint` is set" },
+      { name: "CloudWatch Logs", purpose: "JSON lines with order ID, message ID, and result. Retention 14 days. No alarms, because there is no on-call destination" },
+      { name: "IAM execution role", purpose: "Consume the order queue, publish to the topic, write this function's logs. Cannot read the dead-letter queue" },
+      { name: "Terraform", purpose: "Defines the queue, DLQ, Lambda, SNS, IAM, and log group in `eu-central-1`. State and tfvars stay off git" },
+      { name: "Local producer scripts", purpose: "Stand in for checkout. `sqs:SendMessage` only, credentials from the AWS CLI chain, no keys in the repo" },
+    ],
+    sections: {
+      overview: [
+        {
+          type: "paragraph",
+          text: "An e-commerce company should still accept orders when notification or warehouse handling is slow. This lab replaces a synchronous order flow with a small asynchronous pipeline: SQS buffers the order, one Lambda function processes it, SNS announces the accepted order, and a dead-letter queue isolates a message that still fails after three attempts.",
+        },
+        {
+          type: "paragraph",
+          text: "The stack is defined in Terraform and deployed in `eu-central-1`. There is no checkout UI, payment gateway, or warehouse system. The producer is a local script, which is enough to show the reliability behavior under a normal load, a 500-order burst, and a deliberate processing failure.",
+        },
+      ],
+      problem: [
+        {
+          type: "paragraph",
+          text: "During a short, high-traffic event such as Black Friday, order intake, customer notification, and warehouse handoff often run inside one request. Those steps succeed or fail together. A timeout in a downstream system fails an order the business could have accepted and finished later, the spike reaches every dependency at once, and a poison message is retried in the same path as healthy orders.",
+        },
+        {
+          type: "table",
+          columns: ["Need", "How the lab shows it"],
+          rows: [
+            ["Intake survives a downstream failure", "SQS accepts the message before Lambda publishes. The producer does not wait for SNS"],
+            ["A burst waits in a buffer", "500 orders are sent one at a time; the queue absorbs them while the function catches up"],
+            ["Temporary failures retry without a person", "Visibility timeout 60 seconds, maximum receive count 3"],
+            ["Permanent failures leave the main queue", "After three receives, SQS moves the message to a dead-letter queue with no consumer"],
+            ["Operators can see backlog and failures", "Queue depth, oldest-message age, and JSON logs. Lambda `Errors` is not the proof of a caught failure"],
+          ],
+        },
+        {
+          type: "paragraph",
+          text: "The requirement is narrower than a full commerce platform. The function validates the order and publishes a notification. That is enough to show buffering, asynchronous processing, partial batch failure, retries, a dead-letter queue, and operational visibility.",
+        },
+      ],
+      architecture: [
+        {
+          type: "paragraph",
+          text: "The local scripts stand in for the checkout service. They only need `sqs:SendMessage`. After SQS stores the JSON order, an event source mapping invokes the order processor with a batch of up to 10 messages. A valid order is published to SNS with the order ID, product, quantity, amount, and status `ACCEPTED`. The published message does not contain the customer email.",
+        },
+        {
+          type: "heading",
+          text: "Path of a healthy order",
+        },
+        {
+          type: "list",
+          ordered: true,
+          items: [
+            "`scripts/send-orders.js` calls `SendMessage` on the standard order queue. The script's job ends when SQS accepts the message.",
+            "The queue stores the message for up to four days. Other producers can continue to send while processing catches up.",
+            "The event source mapping invokes the function with up to 10 messages.",
+            "For each record the function parses the body, validates the fields, and publishes one SNS message.",
+            "The function returns no failure identifier for that record. Lambda deletes it from the queue.",
+            "CloudWatch Logs receives one JSON line with the order ID, the SQS message ID, and `result: accepted`.",
+          ],
+        },
+        {
+          type: "heading",
+          text: "Path of a failed order",
+        },
+        {
+          type: "list",
+          ordered: true,
+          items: [
+            "`scripts/send-failed-order.js` sends the same shape with `simulateFailure` set to `true`. An invalid body fails in the same way.",
+            "The function catches the error for that record only. Other records in the batch are still processed.",
+            "The return value lists that SQS message ID in `batchItemFailures`.",
+            "Lambda deletes the successful records and makes the failed record visible again after the 60-second visibility timeout.",
+            "After three failed receives, SQS moves the message to the dead-letter queue, which keeps it for 14 days.",
+            "Nothing consumes that queue automatically. An operator inspects it and, once the cause is fixed, redrives it or deletes a pure test message.",
+          ],
+        },
+        {
+          type: "heading",
+          text: "Order message",
+        },
+        {
+          type: "code",
+          language: "json",
+          caption: "Producer body. simulateFailure is a lab switch; production traffic should not use it",
+          code: `{
+  "orderId": "ORD-1001",
+  "customerEmail": "customer@example.com",
+  "product": "Laptop",
+  "quantity": 1,
+  "amount": 1200,
+  "simulateFailure": false
+}`,
+        },
+        {
+          type: "heading",
+          text: "Operational defaults",
+        },
+        {
+          type: "table",
+          columns: ["Setting", "Value"],
+          rows: [
+            ["Region", "`eu-central-1`"],
+            ["Lambda runtime", "Node.js 22, 256 MB, 10-second timeout"],
+            ["Visibility timeout", "60 seconds"],
+            ["Batch size", "10, with `ReportBatchItemFailures`"],
+            ["Maximum receive count", "3"],
+            ["Main queue retention", "4 days, SQS-managed SSE"],
+            ["Dead-letter retention", "14 days, no consumer"],
+            ["Log retention", "14 days"],
+            ["Email subscription", "Off unless `sns_email_endpoint` is set"],
+          ],
+        },
+        {
+          type: "paragraph",
+          text: "The queue is a standard queue, not FIFO. SQS Standard can deliver a message more than once. The function does not remember that it has already published a notification for an order ID. A timeout after a successful `Publish` can therefore send a second notification. Exactly-once processing would need a durable idempotency record; this project documents that requirement and does not pretend the queue provides it.",
+        },
+      ],
+      implementation: [
+        {
+          type: "paragraph",
+          text: "Terraform creates the queues, IAM role, Lambda, SNS topic, and log group. Resource names default to `ecommerce-order-dev`. The Lambda log group is created in Terraform at `/aws/lambda/<function-name>` so the function does not need permission to create log groups. The deployment package is only `index.js`; the Node.js 22 runtime already includes AWS SDK for JavaScript v3.",
+        },
+        {
+          type: "paragraph",
+          text: "The handler reports a failed order inside a successful invocation. Lambda's `Errors` metric therefore stays at zero for the simulated failure. The proof of failure is the log line and the dead-letter queue, not the Lambda error count.",
+        },
+        {
+          type: "code",
+          language: "javascript",
+          caption: "src/order-processor/index.js: retry only the failed records in the batch",
+          code: `exports.handler = async (event) => {
+  const batchItemFailures = [];
+
+  for (const record of event.Records ?? []) {
+    try {
+      await processRecord(record);
+    } catch (error) {
+      console.error(
+        JSON.stringify({
+          messageId: record.messageId,
+          result: "failed",
+          error: error instanceof Error ? error.message : "Unknown processing error",
+        }),
+      );
+      if (record.messageId) {
+        batchItemFailures.push({ itemIdentifier: record.messageId });
+      }
+    }
+  }
+
+  return { batchItemFailures };
+};`,
+        },
+        {
+          type: "paragraph",
+          text: "`terraform.tfvars` and local state are gitignored. After `terraform init`, `.terraform.lock.hcl` is committed so provider versions are pinned without storing account data. Destroy deletes the queues and any messages still in them. The 500-order run stays far inside the Lambda, SQS, and SNS free tiers. There is no EC2, RDS, NAT Gateway, API Gateway, customer-managed KMS key, or CloudWatch alarm.",
+        },
+      ],
+      decisions: [
+        {
+          type: "heading",
+          text: "Asynchronous and decoupled, not a longer request",
+        },
+        {
+          type: "paragraph",
+          text: "A synchronous call chain has one advantage: the caller learns the final result before the request ends. The slowest dependency then sets throughput, and a single timeout becomes a failed order. Here the producer is finished when SQS accepts the message. The customer does not get a synchronous \"notification sent\" response, and a standard queue can deliver the same message more than once. For a sale event, keeping the order and isolating the failure matter more than answering every downstream step in the original request.",
+        },
+        {
+          type: "heading",
+          text: "SQS Standard instead of FIFO",
+        },
+        {
+          type: "paragraph",
+          text: "FIFO adds ordering and a deduplication window, with lower throughput. This problem is spike absorption and failure isolation, not strict per-customer ordering. FIFO deduplication also would not make the SNS publish exactly-once: if the function publishes and crashes before deleting the message, SQS delivers that same message again. The standard queue makes at-least-once behavior obvious.",
+        },
+        {
+          type: "heading",
+          text: "Dead-letter queue, max receive count 3",
+        },
+        {
+          type: "paragraph",
+          text: "Three receives cover a short processing error. The 60-second visibility timeout spreads those attempts over a few minutes instead of a tight loop. Fourteen days on the dead-letter queue gives an operator time to inspect. An automatic consumer on that queue would put poison messages back into processing.",
+        },
+        {
+          type: "heading",
+          text: "One Lambda function and partial batch response",
+        },
+        {
+          type: "paragraph",
+          text: "The business step is validation plus one notification. A second function, a second queue, or Step Functions would add moving parts without a second business system to protect. Failing the whole ten-message invocation would retry the good orders and could publish them again. `ReportBatchItemFailures` retries only the failed message. The function is not in a VPC, so there is no NAT Gateway.",
+        },
+        {
+          type: "heading",
+          text: "SNS instead of another queue",
+        },
+        {
+          type: "paragraph",
+          text: "A queue implies another worker and another retry policy. The notification is a fact about an order that already passed validation. EventBridge would fit if many products had to filter a wide event bus; this lab has one producer of one event type.",
+        },
+        {
+          type: "heading",
+          text: "Idempotency documented, not built",
+        },
+        {
+          type: "paragraph",
+          text: "A production processor would record the order ID in a durable store before treating the notification as final. DynamoDB is the usual AWS tool for that. Leaving the table out keeps the remaining gap explicit: this pipeline can emit two notifications for one order. A half-built lock would look like exactly-once processing.",
+        },
+      ],
+      testing: [
+        {
+          type: "paragraph",
+          text: "The commands sent 10 valid orders, then 500, then one order with `simulateFailure` set to `true`. SQS Standard can deliver a message more than once, so two notifications for one order is not a failed test.",
+        },
+        {
+          type: "table",
+          columns: ["Scenario", "Command", "What the run showed"],
+          rows: [
+            ["A — normal processing", "`node send-orders.js 10`", "One `accepted` log line per message; main queue returned to about zero visible messages; dead-letter queue stayed empty"],
+            ["B — traffic spike", "`node send-orders.js 500`", "Lambda 509 invocations, 100% success, zero throttles, peak concurrency 5, average duration about 100 ms. Visible-message graph stayed near zero; oldest-message age still moved to about 2.7 minutes"],
+            ["C — processing failure", "`node send-failed-order.js`", "Script still reported `submitted`. After three receives the message sat in `ecommerce-order-dev-order-dlq`. Lambda `Errors` stayed at zero"],
+            ["D — recovery", "Inspect, then delete or redrive", "A managed redrive copies the body unchanged. Redriving while `simulateFailure` is still `true` fails three more times. Delete a lab message after inspection"],
+          ],
+        },
+        {
+          type: "paragraph",
+          text: "`NumberOfEmptyReceives` climbs while the queue is idle because the event source mapping polls SQS even when there is nothing to process. An empty receive is not a failed order. The producer sends orders one at a time, and each order takes only a few tens of milliseconds, so Lambda kept up with the script. A backlog of visible messages appears when the producer is faster than the consumer; here the useful evidence is that sent, received, and deleted counts spiked together.",
+        },
+      ],
+      security: [
+        {
+          type: "list",
+          items: [
+            "The function assumes `ecommerce-order-dev-order-processor`. No access key is stored in source, Lambda environment variables, or Terraform.",
+            "The inline policy is three statements: consume the order queue, publish to the topic, write this function's log group. Queue consumption and notification are separate so a change to one does not widen the other.",
+            "The role cannot read or delete dead-letter messages. Redrive uses the operator's credentials.",
+            "The queue, dead-letter queue, and topic are private to the account. There is no public queue policy and no `Principal: \"*\"`.",
+            "Orders are encrypted at rest with SQS-managed encryption, not a customer-managed KMS key.",
+            "The function does not log the customer email or the raw message body. SNS also omits the email. The address is still validated so a broken payload is rejected.",
+            "`simulateFailure` is a lab control on the message body. Anyone who can send to the queue can set it. It is not authorization, and it should be removed before the function processes real orders.",
+          ],
+        },
+        {
+          type: "paragraph",
+          text: "Terraform state is local. The state file can contain resource identifiers and, if set, the notification email. It is gitignored. `.terraform.lock.hcl` pins provider versions and does not contain account data.",
+        },
+      ],
+      lessons: [
+        {
+          type: "list",
+          items: [
+            "Acceptance and processing are different steps. SQS can return a message ID for an order the function will later reject.",
+            "A caught failure is not a Lambda error. Use the log line and the dead-letter queue, not `Errors`, as the proof.",
+            "SQS Standard is at-least-once. A successful SNS publish followed by a timeout can process the same order again.",
+            "FIFO would not have made the notification exactly-once, and it would have hidden the lesson this lab is meant to show.",
+            "An empty receive is polling, not a failed order.",
+            "Recovery is an operation, not another piece of the platform. No extra queue or function was added for redrive.",
+          ],
+        },
+      ],
+      future: [
+        {
+          type: "list",
+          items: [
+            "A DynamoDB idempotency record written before the notification is treated as final.",
+            "Pin `@aws-sdk/client-sns` inside the deployment package so a runtime update cannot change the SDK on the host.",
+            "Maximum event-source concurrency if a later version called a warehouse or payment API.",
+            "CloudWatch alarms once there is an on-call destination.",
+            "Remove `simulateFailure` before the function processes real orders.",
+          ],
+        },
+      ],
+    },
+  },
   {
     slug: "serverless-image-processing",
     title: "Serverless Image Processing on AWS",
@@ -440,7 +786,6 @@ done | sort | uniq -c`,
     summary:
       "A working notebook of small Terraform configurations against AWS, from a first resource to modules, dynamic blocks, environment-specific variables, and a remote S3 backend.",
     kind: "Learning log",
-    featured: true,
     tags: ["Terraform", "HCL", "AWS", "EC2", "IAM", "Infrastructure as Code"],
     repositoryUrl: "https://github.com/ayberkgerey/terraform_cheatcodes",
     stack: [
